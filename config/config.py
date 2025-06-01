@@ -1,0 +1,22 @@
+WAZUH_SERVER = "192.168.0.10"
+OSSEC_SERVER = "192.168.0.12"
+WAZUH_AGENT = "192.168.0.15"
+OSSEC_AGENT = "192.168.0.16"
+KALI_LINUX = "192.168.0.13"
+ELK_SERVER = "192.168.0.14"
+
+SSH_USERNAME = "user"
+SSH_PASSWORD = "user1234"
+
+ELASTIC_AUTH = ("elastic", "WLS5gHvR=+zJxq0YUAy9")
+
+WAZUH_LOG_PATH = "/var/ossec/logs/alerts/alerts.log"
+OSSEC_LOG_PATH = "/var/ossec/logs/alerts/alerts.log"
+
+ELK_URL = "http://192.168.0.14:9200"
+ELK_INDEX = "wazuh-*"
+WAZUH_INDEX = "filebeat-*"
+
+SSH_PORT = 22
+ATTEMPT_COUNT = 5
+BRUTEFORCE_RULE_IDS = ["5710"]

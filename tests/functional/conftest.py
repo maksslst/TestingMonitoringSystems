@@ -1,5 +1,4 @@
 def pytest_addoption(parser):
-    """Добавляет аргумент --target-ip для PyTest."""
     parser.addoption(
         "--target-ip",
         action="store",

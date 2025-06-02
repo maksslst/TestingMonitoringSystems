@@ -6,7 +6,6 @@ import pytest
 from elasticsearch import Elasticsearch
 from config.config import WAZUH_AGENT, OSSEC_AGENT, ELK_URL, WAZUH_INDEX, ELASTIC_AUTH, SSH_PORT, ATTEMPT_COUNT, BRUTEFORCE_RULE_IDS
 
-# Инициализация клиента Elasticsearch
 es = Elasticsearch(
     ELK_URL,
     basic_auth=ELASTIC_AUTH,
@@ -15,7 +14,6 @@ es = Elasticsearch(
 
 
 def get_local_ip():
-    """Определяет локальный IP-адрес машины."""
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.settimeout(0)
@@ -29,23 +27,20 @@ def get_local_ip():
 
 @pytest.fixture
 def target_ip(request):
-    """Возвращает IP-адрес тестируемой машины."""
     target_ip = request.config.getoption("--target-ip")
     if target_ip:
         print(target_ip)
-        return target_ip  # Если указан IP, возвращаем его
-    return [WAZUH_AGENT, OSSEC_AGENT]  # По умолчанию оба агента
+        return target_ip
+    return [WAZUH_AGENT, OSSEC_AGENT]
 
 
 def test_multiple_failed_ssh_logins(target_ip):
-    """Тест для проверки обнаружения brute-force попыток по SSH."""
     if isinstance(target_ip, list):
         pytest.skip("Тест требует одного IP-адреса через --target-ip или по умолчанию")
 
     source_ip = get_local_ip()
     print(f"[+] Симулируем {ATTEMPT_COUNT} неудачных попыток входа по SSH на {target_ip} с {source_ip}...")
 
-    # Эмуляция brute-force
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     username = "invaliduser"
@@ -74,11 +69,9 @@ def test_multiple_failed_ssh_logins(target_ip):
     finally:
         ssh.close()
 
-    # Ожидание обработки событий
     print("[+] Ожидаем 60 секунд для обработки событий Wazuh/OSSEC через Filebeat и ELK...")
     time.sleep(60)
 
-    # Проверка алерта в Elasticsearch
     print(f"[+] Проверяем события с rule.id: {BRUTEFORCE_RULE_IDS} в Elasticsearch...")
     try:
         query = {
@@ -87,7 +80,7 @@ def test_multiple_failed_ssh_logins(target_ip):
                     "must": [
                         {"terms": {"rule.id": BRUTEFORCE_RULE_IDS}},
                         {"range": {"rule.level": {"gte": 5}}},
-                        {"term": {"data.srcip": source_ip}}  # Используем автоматически определённый IP
+                        {"term": {"data.srcip": source_ip}}
                     ]
                 }
             },

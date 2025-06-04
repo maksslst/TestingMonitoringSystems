@@ -1,10 +1,10 @@
-print("Loading test_verifying__unsuccessful_ssh_login.py")
 import time
 import socket
 import paramiko
 import pytest
 from elasticsearch import Elasticsearch
-from config.config import WAZUH_AGENT, OSSEC_AGENT, ELK_URL, WAZUH_INDEX, ELASTIC_AUTH, SSH_PORT, ATTEMPT_COUNT, BRUTEFORCE_RULE_IDS
+from config.config import WAZUH_AGENT, OSSEC_AGENT, ELK_URL, WAZUH_INDEX, ELASTIC_AUTH, SSH_PORT, ATTEMPT_COUNT, \
+    BRUTEFORCE_RULE_IDS
 
 es = Elasticsearch(
     ELK_URL,
@@ -24,6 +24,7 @@ def get_local_ip():
     except Exception as e:
         print(f"[-] Ошибка при определении локального IP: {str(e)}")
         return "127.0.0.1"
+
 
 @pytest.fixture
 def target_ip(request):

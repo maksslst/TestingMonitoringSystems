@@ -2,11 +2,12 @@ from locust import User, task, between, events
 from locust.exception import StopUser
 from elasticsearch import Elasticsearch
 from datetime import datetime, timezone
+import threading
 import paramiko
 import time
 from config.config import ELK_URL, ELASTIC_AUTH, SSH_USERNAME, SSH_PASSWORD
 
-TARGET_IP = "192.168.0.16"
+TARGET_IP = "192.168.0.15"
 LOG_FILE = "/var/log/test_app.log"
 RULE_IDS = ["5501"]
 LOG_COUNT = 10000
@@ -18,6 +19,7 @@ ssh_client = None
 alerts_found = 0
 raw_logs_found = 0
 total_logs_sent = 0
+lock = threading.Lock()
 
 
 def create_ssh_client():
@@ -146,7 +148,7 @@ class WazuhLoadTest(User):
 
     @task
     def send_log_entry(self):
-        global ssh_client, total_logs_sent, lock
+        global ssh_client, total_logs_sent
         if self.sent_logs >= LOG_COUNT:
             raise StopUser()
 

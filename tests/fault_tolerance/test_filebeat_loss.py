@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 import paramiko
 from requests.auth import HTTPBasicAuth
 
-SERVER_IP = "192.168.0.10"
+SERVER_IP = "192.168.0.12"
 SSH_USERNAME = "user"
 SSH_PASSWORD = "user1234"
 ELASTIC_URL = "http://192.168.0.14:9200"

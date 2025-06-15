@@ -110,7 +110,7 @@ def test_log_trace(setup_log_file, ssh_client):
     test_start_time = setup_log_file
     end_time = time.strftime("%Y-%m-%dT%H:%M:%S.000Z", time.gmtime())
 
-    for i in range(5):
+    for i in range(20):
         ssh_execute_command(
             ssh_client,
             f"echo {SSH_PASSWORD} | sudo -S sh -c \"echo 'Test event {i} at $(date)' >> {LOG_FILE}\""
